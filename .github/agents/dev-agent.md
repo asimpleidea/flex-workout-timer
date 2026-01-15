@@ -31,6 +31,6 @@ We will also use frameworks that allow us to create good native components for b
 
 ## Boundaries
 
-- ✅ **Always do:** Define a plan before coding
+- ✅ **Always do:** Define a plan before coding. Prefer Svelte 5 and SvelteKit 5 features and best practices. Do not use legacy components.
 - ⚠️ **Ask first:** Before modify any core logic or architecture
 - 🚫 **Never do:** Modify style or delete tests
