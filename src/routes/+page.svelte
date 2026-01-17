@@ -5,7 +5,7 @@
     type Interval,
     IntervalType,
   } from "$lib/models";
-  import { MAX_NAME_LENGTH } from "$lib/constants";
+  import { MAX_NAME_LENGTH, DEFAULT_SET_COLOR } from "$lib/constants";
   import { timerStore } from "$lib/stores/timer-store.svelte";
 
   // Form State
@@ -64,7 +64,7 @@
     isCreatingSet = true;
     newSetName = "";
     newSetIterations = 1;
-    newSetColor = "#3b82f6";
+    newSetColor = DEFAULT_SET_COLOR;
   }
 
   function cancelSetCreation() {
