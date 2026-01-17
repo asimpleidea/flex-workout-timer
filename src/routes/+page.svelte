@@ -4,11 +4,9 @@
     type WorkoutSet,
     type Interval,
     IntervalType,
-  } from "$lib/types";
+  } from "$lib/models";
   import { MAX_NAME_LENGTH } from "$lib/constants";
-
-  // Placeholder data source: currently empty
-  let timers = $state<Timer[]>([]);
+  import { timerStore } from "$lib/stores/timer-store.svelte";
 
   // Form State
   let isCreating = $state(false);
@@ -129,14 +127,12 @@
     const newTimer: Timer = {
       id: Math.random().toString(36).substring(2, 9),
       title: newTimerTitle,
-      date: new Date().toISOString(),
-      // Must clone sets or reference them? If we reset newTimerSets, we might lose them if we don't copy deeply enough,
-      // but newTimerSets = [] later reassigns the state variable, so the old array is safe.
-      // However, $state objects are proxies. JSON.stringify or $state.snapshot is often useful for debugging but here reference is okay as we clear the master list.
       sets: $state.snapshot(newTimerSets),
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
     };
 
-    timers.push(newTimer);
+    timerStore.save(newTimer);
     cancelCreation();
   }
 </script>
@@ -312,11 +308,11 @@
   <section>
     <h2>My Timers</h2>
 
-    {#if timers.length === 0}
+    {#if timerStore.timers.length === 0}
       <p>No timers found.</p>
     {:else}
       <ul>
-        {#each timers as timer (timer.id)}
+        {#each timerStore.timers as timer (timer.id)}
           <li>
             {timer.title} ({timer.sets.length} sets)
           </li>
@@ -325,12 +321,14 @@
 
       <div style="margin-top: 2rem; background: #eee; padding: 1rem;">
         <h3>Debug: JSON Data</h3>
-        <button on:click={() => console.log(JSON.stringify(timers, null, 2))}
+        <button
+          on:click={() =>
+            console.log(JSON.stringify(timerStore.timers, null, 2))}
           >Log to Console</button
         >
         <pre
           style="background: #333; color: #fff; padding: 10px; overflow: auto; max-height: 300px;">
-          {JSON.stringify(timers, null, 2)}
+          {JSON.stringify(timerStore.timers, null, 2)}
         </pre>
       </div>
     {/if}
